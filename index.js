@@ -18,11 +18,7 @@ let notes = [
 		important: true,
 	},
 ];
-app.use(express.json());
 const cors = require("cors");
-
-app.use(express.static("dist"));
-app.use(cors());
 const requestLogger = (request, response, next) => {
 	console.log("Method:", request.method);
 	console.log("Path:  ", request.path);
@@ -31,6 +27,9 @@ const requestLogger = (request, response, next) => {
 	next();
 };
 
+app.use(cors());
+app.use(express.json());
+app.use(express.static("dist"));
 app.use(requestLogger);
 
 const unknownEndpoint = (request, response) => {
@@ -77,13 +76,10 @@ app.post("/api/notes", (request, response) => {
 	response.json(note);
 });
 
-app.get("/", (request, response) => {
-	response.send("<h1>Hello World!</h1>");
-});
-
 app.get("/api/notes", (request, response) => {
 	response.json(notes);
 });
+
 app.use(unknownEndpoint);
 
 const PORT = process.env.PORT || 3001;
